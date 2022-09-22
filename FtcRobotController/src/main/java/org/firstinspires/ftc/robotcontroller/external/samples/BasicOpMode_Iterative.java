@@ -109,7 +109,7 @@ public class BasicOpMode_Iterative extends OpMode
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
-        // POV Mode uses left stick to go forward, and right stick to turn.
+        // POV Mode uses left stick to go forward, and right1 stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = -gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;

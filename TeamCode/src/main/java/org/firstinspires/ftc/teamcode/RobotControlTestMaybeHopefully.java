@@ -100,7 +100,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
 
 
-        MecanumDrive driveController = new MecanumDrive(motor1, motor2,motor4,motor2);
+        MecanumDrive driveController = new MecanumDrive(motor1, motor2,motor4,motor3);
 
 
 
@@ -128,10 +128,14 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (gamepad1.a) servo.setPosition(servo.getPosition() + 5);
-            else if (gamepad1.b) servo.setPosition(servo.getPosition() - 5);
-            if (gamepad1.x) motor.setPower(1);
-            if (gamepad1.left_stick_x == 5) motor1.setPower(0.8);
+            if (gamepad1.a) {
+                servo.setPosition(servo.getPosition() + 5);
+            }
+            else if (gamepad1.b){
+                servo.setPosition(servo.getPosition() - 5);
+            }
+            //if (gamepad1.x) motor.setPower(1);
+           /* if (gamepad1.left_stick_x == 5) motor1.setPower(0.8);
             else if (gamepad1.x){
                 motor2.setPower(1);
                 motor3.setPower(1);
@@ -152,7 +156,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
                 motor3.setPower(-1);
                 motor2.setPower(-0.5);
                 motor1.setPower(-0.3);
-            }
+            }*/
 
             double stickLx = this.gamepad1.left_stick_x;
 
@@ -168,7 +172,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
             double speed = 1;
 
-            driveController.moveInTeleop(stickLx, stickLy, stickRx,speed);
+            driveController.moveInTeleop(-stickLx, -stickLy, -stickRx,speed);
 
             telemetry.addData("toggleB", toggleBack);
 

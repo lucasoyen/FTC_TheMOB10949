@@ -41,12 +41,12 @@ public class SingleMotorTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.a) {
-                topRight.setPower(0.25);
-                backLeft.setPower(0.25);
+                topRight.setPower(1);
+                backLeft.setPower(1);
             }
             else if (gamepad1.b) {
-                topRight.setPower(-.25);
-                backLeft.setPower(-.25);
+                topRight.setPower(-1);
+                backLeft.setPower(-1);
             }
             else {
                 topRight.setPower(0);

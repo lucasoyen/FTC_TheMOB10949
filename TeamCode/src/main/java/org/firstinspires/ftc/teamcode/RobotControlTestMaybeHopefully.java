@@ -114,6 +114,12 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
         boolean pressable2 = true;
 
+        boolean pressable3 = true;
+
+        boolean pressable4 = true;
+
+        boolean pressable5 = true;
+
         telemetry.addData("Status", "Initialized");
 
 
@@ -128,12 +134,28 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (gamepad1.a) {
-                servo.setPosition(servo.getPosition() + 5);
+
+
+            if (gamepad1.y && pressable4 == true) {
+                servo.setPosition(servo.getPosition() + 2);
+
+                pressable4 = false;
             }
-            else if (gamepad1.b){
-                servo.setPosition(servo.getPosition() - 5);
+
+            if (gamepad1.y == false){
+                pressable4 = true;
             }
+
+            if (gamepad1.x && pressable5 == true){
+                servo.setPosition(servo.getPosition() - 2);
+
+                pressable5 = false;
+            }
+
+            if (gamepad1.x == false){
+                pressable5 = true;
+            }
+
             //if (gamepad1.x) motor.setPower(1);
            /* if (gamepad1.left_stick_x == 5) motor1.setPower(0.8);
             else if (gamepad1.x){
@@ -164,7 +186,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
             double stickRx = this.gamepad1.right_stick_x;
 
-            boolean a = this.gamepad1.a;
+            boolean a = this.gamepad1.dpad_down;
 
 
 
@@ -172,7 +194,50 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
             double speed = 1;
 
+            if(a){
+
+                speed = .5;
+
+            }
+
             driveController.moveInTeleop(-stickLx, -stickLy, -stickRx,speed);
+
+
+
+            if (gamepad1.a && pressable2 == true) {
+
+                pressable2 = false;
+
+                toggleBack2 = !toggleBack2;
+
+            }
+
+            if (gamepad1.a == false) {
+
+                x = false;
+
+                pressable2 = true;
+
+            }
+
+            if (gamepad1.b && pressable3 == true){
+                pressable3 = false;
+
+                motor.setPower(1);
+            }
+
+            if (gamepad1.b == false){
+                pressable3 = true;
+            }
+
+            if (gamepad1.left_bumper){
+                servo.setPosition(55);
+                for(int i = 0; i<20; i++){
+                    motor.setPower(0.1);
+                }
+            }
+
+
 
             telemetry.addData("toggleB", toggleBack);
 

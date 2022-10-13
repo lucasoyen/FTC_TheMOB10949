@@ -241,6 +241,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
                 }
             }
 
+            //macro1
             if(b && pressable6){
                 driveController.setMoveForward(1);
                 pressable6 = false;
@@ -251,7 +252,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             if(driveController.movedToTarget()){
                 pressable6 = true;
             }
-
+            //end of macro1
 
 
             telemetry.addData("toggleB", toggleBack);

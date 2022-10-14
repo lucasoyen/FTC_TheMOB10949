@@ -120,6 +120,8 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
         boolean pressable5 = true;
 
+        boolean pressable6 = true;
+
         telemetry.addData("Status", "Initialized");
 
 
@@ -188,13 +190,15 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
             boolean a = this.gamepad1.dpad_down;
 
+            boolean b = this.gamepad1.right_bumper;
 
 
 
 
-            double speed = 1;
 
-            if(a){
+            double speed = 1.0;
+
+            if(a) {
 
                 speed = .5;
 
@@ -237,6 +241,18 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
                 }
             }
 
+            //macro1
+            if(b && pressable6){
+                driveController.setMoveForward(1);
+                pressable6 = false;
+            }
+            if(driveController.movedToTarget()){
+                driveController.setMoveRight(1);
+            }
+            if(driveController.movedToTarget()){
+                pressable6 = true;
+            }
+            //end of macro1
 
 
             telemetry.addData("toggleB", toggleBack);

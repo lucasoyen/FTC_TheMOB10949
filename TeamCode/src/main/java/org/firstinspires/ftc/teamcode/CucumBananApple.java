@@ -64,8 +64,8 @@ public class CucumBananApple extends LinearOpMode {
     private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/cucumberbananaapple.tflite";
     private static final String[] LABELS = {
             "apple",
-            "cucumber",
-            "banana"
+            "banana",
+            "cucumber"
     };
 
     /*

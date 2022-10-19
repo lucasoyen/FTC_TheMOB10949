@@ -50,7 +50,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-public class CukeCanoliPizza extends LinearOpMode {
+public class CucumBananApple extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -61,11 +61,11 @@ public class CukeCanoliPizza extends LinearOpMode {
      */
 //    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
 //    private static final String TFOD_MODEL_FILE  = "/Environment.getExternalStorageDirectory().getPath()/FIRST/tflitemodels/CustomTeamModel.tflite";
-    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/cukecanolipizza.tflite";
+    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/cucumberbananaapple.tflite";
     private static final String[] LABELS = {
-            "canoli",
+            "apple",
             "cucumber",
-            "pizza"
+            "banana"
     };
 
     /*

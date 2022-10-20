@@ -99,8 +99,11 @@ public class CucumBananApple extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+        MobRobotHardware robot = new MobRobotHardware();
+        robot.init(hardwareMap);
         initVuforia();
         initTfod();
+        MecanumDrive drive = new MecanumDrive(robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -145,6 +148,22 @@ public class CucumBananApple extends LinearOpMode {
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                         }
+                        int forwardDist = 5;
+                        int sideDist = 3;
+
+                        drive.setMoveForward(forwardDist);
+                        drive.setPowerToTarget(1);
+                        sleep(3000);
+                        if (updatedRecognitions.get(0).getLabel().equals("apple")) {
+                            drive.setMoveRight(sideDist);
+                            drive.setPowerToTarget(1);
+                            sleep(3000);
+                        } else if (updatedRecognitions.get(0).getLabel().equals("cucumber")) {
+                            drive.setMoveLeft(sideDist);
+                            drive.setPowerToTarget(1);
+                            sleep(3000);
+                        }
+                        tfod.deactivate();
                         telemetry.update();
                     }
                 }

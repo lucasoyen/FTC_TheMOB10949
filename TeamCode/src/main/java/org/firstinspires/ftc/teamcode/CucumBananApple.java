@@ -32,6 +32,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -94,16 +97,31 @@ public class CucumBananApple extends LinearOpMode {
      * Detection engine.
      */
     private TFObjectDetector tfod;
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backLeft;
+    private DcMotor backRight;
+
 
     @Override
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-        MobRobotHardware robot = new MobRobotHardware();
-        robot.init(hardwareMap);
+        HardwareMap hw = hardwareMap;
+
+        DcMotor frontLeft = hw.get(DcMotor.class, "frontLeft");
+        DcMotor frontRight = hw.get(DcMotor.class, "frontRight");
+        DcMotor backLeft = hw.get(DcMotor.class, "frontLeft");
+        DcMotor backRight = hw.get(DcMotor.class, "frontLeft");
+
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         initVuforia();
         initTfod();
-        MecanumDrive drive = new MecanumDrive(robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
+        MecanumDrive drive = new MecanumDrive(frontLeft, frontRight, backLeft, backRight);
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.

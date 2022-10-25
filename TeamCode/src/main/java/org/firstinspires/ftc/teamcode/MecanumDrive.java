@@ -176,12 +176,7 @@ public class MecanumDrive {
 
     public void setMoveForward(int dist){
 
-        //make the robot move to a set position 
-
-        setTargetMode();
-
-
-
+        //make the robot move to a set position
         //calculate the distance the encoder must change to move to the given value 
 
         exactFL = prevFL + dist;
@@ -204,10 +199,7 @@ public class MecanumDrive {
 
         backRightDrive.setTargetPosition(exactBR);
 
-
-
-
-
+        setTargetMode();
     }
 
 
@@ -300,9 +292,7 @@ public class MecanumDrive {
 
     public void setMoveLeft(int dist){
 
-        //make the robot move to a set position 
-
-        setTargetMode();
+        //make the robot move to a set position
 
 
 
@@ -328,6 +318,7 @@ public class MecanumDrive {
 
         backRightDrive.setTargetPosition(exactBR);
 
+        setTargetMode();
     }
 
 
@@ -360,9 +351,7 @@ public class MecanumDrive {
 
     public void setMoveRight(int dist){
 
-        //make the robot move to a set position 
-
-        setTargetMode();
+        //make the robot move to a set position
 
 
 
@@ -388,6 +377,7 @@ public class MecanumDrive {
 
         backRightDrive.setTargetPosition(exactBR);
 
+        setTargetMode();
     }
 
 

@@ -165,23 +165,24 @@ public class CucumBananApple extends LinearOpMode {
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        }
-                        int forwardDist = 5;
-                        int sideDist = 3;
 
-                        drive.setMoveForward(forwardDist);
-                        drive.setPowerToTarget(1);
-                        sleep(3000);
-                        if (updatedRecognitions.get(0).getLabel().equals("apple")) {
-                            drive.setMoveRight(sideDist);
-                            drive.setPowerToTarget(1);
-                            sleep(3000);
-                        } else if (updatedRecognitions.get(0).getLabel().equals("cucumber")) {
-                            drive.setMoveLeft(sideDist);
-                            drive.setPowerToTarget(1);
-                            sleep(3000);
+//                            int forwardDist = 5;
+//                            int sideDist = 3;
+//
+//                            drive.setMoveForward(forwardDist);
+//                            drive.setPowerToTarget(1);
+//                            sleep(3000);
+//                            if (recognition.getLabel().equals("apple")) {
+//                                drive.setMoveRight(sideDist);
+//                                drive.setPowerToTarget(1);
+//                                sleep(3000);
+//                            } else if (recognition.getLabel().equals("cucumber")) {
+//                                drive.setMoveLeft(sideDist);
+//                                drive.setPowerToTarget(1);
+//                                sleep(3000);
+//                            }
+
                         }
-                        tfod.deactivate();
                         telemetry.update();
                     }
                 }

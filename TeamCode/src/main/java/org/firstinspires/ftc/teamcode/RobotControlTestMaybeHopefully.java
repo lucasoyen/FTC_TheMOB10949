@@ -204,6 +204,9 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
                 speed = .5;
 
             }
+            else{
+                speed = 1.0;
+            }
 
             driveController.moveInTeleop(-stickLx, -stickLy, -stickRx,speed);
 
@@ -236,21 +239,56 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
 
             if (gamepad1.left_bumper){
-                servo.setPosition(55);
-                for(int i = 0; i<20; i++){
-                    motor.setPower(0.1);
-                }
+                servo.setPosition(1);
+                motor.setPower(1);
+                sleep(250);
+                motor.setPower(-1);
+                sleep(250);
+                motor.setPower(0);
+                servo.setPosition(0);
+            }
+
+            //ABORT!!!!!!
+            if(gamepad1.left_trigger>0){
+                servo.setPosition(0);
+                motor.setPower(0);
+                motor1.setPower(0);
+                motor2.setPower(0);
+                motor3.setPower(0);
+                motor4.setPower(0);
             }
 
             //macro1
+            /*if(b && pressable6==true){
+
+                motor1.setPower(1);
+                motor2.setPower(1);
+                motor3.setPower(1);
+                motor4.setPower(1);
+                sleep(500);
+                motor1.setPower(-1);
+                motor2.setPower(1);
+                motor3.setPower(-1);
+                motor4.setPower(1);
+                sleep(500);
+                motor1.setPower(0);
+                motor2.setPower(0);
+                motor3.setPower(0);
+                motor4.setPower(0);
+                pressable6 = false;
+            }
+            else{
+                pressable6 = true;
+            }*/
             if(b && pressable6){
+                driveController.setTargetMode();
                 driveController.setMoveForward(1);
                 pressable6 = false;
             }
-            if(driveController.movedToTarget()){
+            if(!pressable6 && driveController.movedToTarget2()){
                 driveController.setMoveRight(1);
             }
-            if(driveController.movedToTarget()){
+            if(!pressable6 && driveController.movedToTarget2()) {
                 pressable6 = true;
             }
             //end of macro1

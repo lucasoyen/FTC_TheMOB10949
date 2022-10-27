@@ -166,12 +166,13 @@ public class CucumBananApple extends LinearOpMode {
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                             telemetry.update();
-                            int forwardDist = 5;
-                            int sideDist = 3;
+                            int forwardDist = 3;
+                            int sideDist = 2;
 
                             drive.setMoveForward(forwardDist);
                             drive.setPowerToTarget(1);
                             sleep(3000);
+                            drive.stopMoving();
                             if (recognition.getLabel().equals("apple")) {
                                 drive.setMoveRight(sideDist);
                                 drive.setPowerToTarget(1);
@@ -181,6 +182,7 @@ public class CucumBananApple extends LinearOpMode {
                                 drive.setPowerToTarget(1);
                                 sleep(3000);
                             }
+                            drive.stopMoving();
                             telemetry.addData("Drove", true);
                         }
                         telemetry.update();

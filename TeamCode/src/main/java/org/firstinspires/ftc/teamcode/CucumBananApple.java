@@ -52,7 +52,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+@TeleOp(name = "CucumBananApple", group = "Concept")
 public class CucumBananApple extends LinearOpMode {
 
     /*
@@ -107,21 +107,36 @@ public class CucumBananApple extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
-        HardwareMap hw = hardwareMap;
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backRight = hardwareMap.get(DcMotor.class, "frontLeft");
 
-        DcMotor frontLeft = hw.get(DcMotor.class, "frontLeft");
-        DcMotor frontRight = hw.get(DcMotor.class, "frontRight");
-        DcMotor backLeft = hw.get(DcMotor.class, "frontLeft");
-        DcMotor backRight = hw.get(DcMotor.class, "frontLeft");
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
 
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         initVuforia();
         initTfod();
-        MecanumDrive drive = new MecanumDrive(frontLeft, frontRight, backLeft, backRight);
 
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -169,21 +184,12 @@ public class CucumBananApple extends LinearOpMode {
                             int forwardDist = 3;
                             int sideDist = 2;
 
-                            drive.setMoveForward(forwardDist);
-                            drive.setPowerToTarget(1);
-                            sleep(3000);
-                            drive.stopMoving();
+                            encoderDrive(1, 1, 1, 1, 1);
                             if (recognition.getLabel().equals("apple")) {
-                                drive.setMoveRight(sideDist);
-                                drive.setPowerToTarget(1);
-                                sleep(3000);
+                                encoderDrive(1, -1, -1, 1, 1);
                             } else if (recognition.getLabel().equals("cucumber")) {
-                                drive.setMoveLeft(sideDist);
-                                drive.setPowerToTarget(1);
-                                sleep(3000);
+                                encoderDrive(-1, 1, 1, -1, 1);
                             }
-                            drive.stopMoving();
-                            telemetry.addData("Drove", true);
                         }
                         telemetry.update();
                     }
@@ -215,7 +221,7 @@ public class CucumBananApple extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.50f;
+        tfodParameters.minResultConfidence = 0.40f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
@@ -224,5 +230,42 @@ public class CucumBananApple extends LinearOpMode {
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
 //        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
          tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+    }
+    private void encoderDrive(double fl, double fr, double bl, double br, double speed) {
+        int frontLeftTarget = (int)(fl * 1400);
+        int frontRightTarget = (int)(fr * 1400);
+        int backLeftTarget = (int)(bl * 1400);
+        int backRightTarget = (int)(br * 1400);
+
+        frontLeft.setTargetPosition(frontLeftTarget);
+        frontRight.setTargetPosition(frontRightTarget);
+        backLeft.setTargetPosition(backLeftTarget);
+        backRight.setTargetPosition(backRightTarget);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontLeft.setPower(Math.abs(speed));
+        frontRight.setPower(Math.abs(speed));
+        backLeft.setPower(Math.abs(speed));
+        backRight.setPower(Math.abs(speed));
+
+        while (frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()) {
+            telemetry.addData("Running to", "\nBackLeft: " + backLeftTarget + "\nBackRight: " + backRightTarget + "\nFrontRight: " + frontRightTarget + "\nFrontLeft: " + frontLeftTarget);
+            telemetry.addData("Currently at", backLeft.getCurrentPosition() + ", " + backRight.getCurrentPosition() + ", " + frontRight.getCurrentPosition() + ", " + frontLeft.getCurrentPosition());
+            telemetry.update();
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

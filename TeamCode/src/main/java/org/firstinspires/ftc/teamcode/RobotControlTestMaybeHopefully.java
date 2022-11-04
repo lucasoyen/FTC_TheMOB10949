@@ -303,7 +303,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
             }*/
             telemetry.addData("Color", color_sensor.red() + ", " + color_sensor.green() + ", " + color_sensor.blue());
-
+            //color sensor output
 
 
             telemetry.addData("toggleB", toggleBack);

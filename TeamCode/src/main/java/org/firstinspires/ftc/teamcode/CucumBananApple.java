@@ -84,7 +84,7 @@ public class  CucumBananApple extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
-            "AYBreyn/////AAABmex3dBNyV0o9peox3AFqUSIZBdXEEtbrCYzvGluBC2NjPxjvOXYAqVT9duJdvwm3+MsM2XCgMYapkf6bl9LNBEQzts3UgSm1Cm84J+yfE2UPEy2Z+ulr7sJXtgOMC7JFQmiEhrhjvV3VQJaXeraaZmaRK/4fl7Gx6aCQWySvSCPRA3AltiLiwoPFBNMJkVheZzWIpfkw4gU7j48UATtwnZWQIZtB28cvIvgUMKr1a4S6oUAr7LLBFY1yxXQYVkWvFLKr6F0Ky3WcGh4PXIvhXZuCJxm9T5JFh73aR9l2ZHlj4yTZT1YjnDMh2XPwx4GxvPbQVDDInASsVVRaGcldcPEbmZC4jmRcIVoUG2Osm0WS";
+        "AYBreyn/////AAABmex3dBNyV0o9peox3AFqUSIZBdXEEtbrCYzvGluBC2NjPxjvOXYAqVT9duJdvwm3+MsM2XCgMYapkf6bl9LNBEQzts3UgSm1Cm84J+yfE2UPEy2Z+ulr7sJXtgOMC7JFQmiEhrhjvV3VQJaXeraaZmaRK/4fl7Gx6aCQWySvSCPRA3AltiLiwoPFBNMJkVheZzWIpfkw4gU7j48UATtwnZWQIZtB28cvIvgUMKr1a4S6oUAr7LLBFY1yxXQYVkWvFLKr6F0Ky3WcGh4PXIvhXZuCJxm9T5JFh73aR9l2ZHlj4yTZT1YjnDMh2XPwx4GxvPbQVDDInASsVVRaGcldcPEbmZC4jmRcIVoUG2Osm0WS";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia

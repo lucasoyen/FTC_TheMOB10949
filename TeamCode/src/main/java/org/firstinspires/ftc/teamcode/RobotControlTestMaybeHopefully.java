@@ -37,7 +37,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -63,7 +62,6 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
     private DcMotor motor2;
     private DcMotor motor3;
     private DcMotor motor4;
-    ColorSensor color_sensor;
 
     @Override
     public void runOpMode() {
@@ -74,8 +72,6 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
         motor2 = hardwareMap.get(DcMotor.class, "frontRight");
         motor3 = hardwareMap.get(DcMotor.class, "backRight");
         motor4 = hardwareMap.get(DcMotor.class, "backLeft");
-
-        color_sensor = hardwareMap.colorSensor.get("color");
 
         motor1.setDirection(DcMotor.Direction.FORWARD);
 
@@ -106,7 +102,6 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
 
         MecanumDrive driveController = new MecanumDrive(motor1, motor2,motor4,motor3);
-
 
 
 
@@ -264,7 +259,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
 
             //macro1
-             if(b && pressable6==true){
+            /*if(b && pressable6==true){
 
                 motor1.setPower(1);
                 motor2.setPower(1);
@@ -284,8 +279,8 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
             else{
                 pressable6 = true;
-            }
-            /*if(b && pressable6){
+            }*/
+            if(b && pressable6){
                 driveController.setTargetMode();
                 driveController.setMoveForward(1);
                 pressable6 = false;
@@ -295,15 +290,8 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
             if(!pressable6 && driveController.movedToTarget2()) {
                 pressable6 = true;
-            }*/
+            }
             //end of macro1
-
-            //Color sensor test
-            /*if(color_sensor.red()>=240 && color_sensor.green()>=240 && color_sensor.blue()<=20){
-
-            }*/
-            telemetry.addData("Color", color_sensor.red() + ", " + color_sensor.green() + ", " + color_sensor.blue());
-            //color sensor output
 
 
             telemetry.addData("toggleB", toggleBack);

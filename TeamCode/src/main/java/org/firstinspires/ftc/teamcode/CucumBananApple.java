@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -71,6 +72,7 @@ public class CucumBananApple extends LinearOpMode {
             "cucumber"
     };
 
+
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -101,7 +103,7 @@ public class CucumBananApple extends LinearOpMode {
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
-
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -184,11 +186,11 @@ public class CucumBananApple extends LinearOpMode {
                             int forwardDist = 3;
                             int sideDist = 2;
 
-                            encoderDrive(1, 1, 1, 1, 1);
+                            encoderForward(forwardDist, 1, 3);
                             if (recognition.getLabel().equals("apple")) {
-                                encoderDrive(1, -1, -1, 1, 1);
+                                encoderRight(sideDist, 1, 3);
                             } else if (recognition.getLabel().equals("cucumber")) {
-                                encoderDrive(-1, 1, 1, -1, 1);
+                                encoderLeft(sideDist, 1, 3);
                             }
                         }
                         telemetry.update();
@@ -231,7 +233,7 @@ public class CucumBananApple extends LinearOpMode {
 //        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
          tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
-    private void encoderDrive(double fl, double fr, double bl, double br, double speed) {
+    private void encoderDrive(double fl, double fr, double bl, double br, double speed, double time) {
         int frontLeftTarget = (int)(fl * 1400);
         int frontRightTarget = (int)(fr * 1400);
         int backLeftTarget = (int)(bl * 1400);
@@ -252,7 +254,9 @@ public class CucumBananApple extends LinearOpMode {
         backLeft.setPower(Math.abs(speed));
         backRight.setPower(Math.abs(speed));
 
-        while (frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()) {
+        runtime.reset();
+
+        while (opModeIsActive() && runtime.seconds() < time && (frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy())) {
             telemetry.addData("Running to", "\nBackLeft: " + backLeftTarget + "\nBackRight: " + backRightTarget + "\nFrontRight: " + frontRightTarget + "\nFrontLeft: " + frontLeftTarget);
             telemetry.addData("Currently at", backLeft.getCurrentPosition() + ", " + backRight.getCurrentPosition() + ", " + frontRight.getCurrentPosition() + ", " + frontLeft.getCurrentPosition());
             telemetry.update();
@@ -267,5 +271,17 @@ public class CucumBananApple extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    private void encoderRight(int dist, double speed, double time) {
+        encoderDrive(dist, -dist, -dist, dist, speed, time);
+    }
+    private void encoderLeft(int dist, double speed, double time) {
+        encoderDrive(-dist, dist, dist, -dist, speed, time);
+    }
+    private void encoderBack(int dist, double speed, double time) {
+        encoderDrive(-dist, -dist, -dist, -dist, speed, time);
+    }
+    private void encoderForward(int dist, double speed, double time) {
+        encoderDrive(dist, dist, dist, dist, speed, time);
     }
 }

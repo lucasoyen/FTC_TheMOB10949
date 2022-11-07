@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;/* Copyright (c) 2017 FIRST. All rights r
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -62,6 +63,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
     private DcMotor motor2;
     private DcMotor motor3;
     private DcMotor motor4;
+    ColorSensor color_sensor;
 
     @Override
     public void runOpMode() {
@@ -293,6 +295,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
             //end of macro1
 
+            telemetry.addData("Color", color_sensor.red() + ", " + color_sensor.green() + ", " + color_sensor.blue());
 
             telemetry.addData("toggleB", toggleBack);
 

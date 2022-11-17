@@ -63,6 +63,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
     private DcMotor motor2;
     private DcMotor motor3;
     private DcMotor motor4;
+    private DcMotor armMotor;
     ColorSensor color_sensor;
 
     @Override
@@ -196,8 +197,16 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             boolean b = this.gamepad1.right_bumper;
 
 
-
-
+            if(this.gamepad1.dpad_up) {
+                armMotor.setPower(0.01);
+            }else{
+                armMotor.setPower(0.0);
+            }
+            if(this.gamepad1.dpad_down) {
+                armMotor.setPower(-0.01);
+            }else{
+                armMotor.setPower(0.0);
+            }
 
             double speed = 1.0;
 

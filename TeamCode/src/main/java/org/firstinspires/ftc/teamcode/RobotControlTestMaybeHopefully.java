@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -63,24 +64,23 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
     private DcMotor motor2;
     private DcMotor motor3;
     private DcMotor motor4;
-    private DcMotor armMotor;
-    ColorSensor color_sensor;
+//    ColorSensor color_sensor;
 
     @Override
     public void runOpMode() {
-        servo = hardwareMap.get(Servo.class, "servo0");
-        servo.setPosition(0);
-        motor = hardwareMap.get(DcMotor.class, "motor4");
+//        servo = hardwareMap.get(Servo.class, "servo0");
+//        servo.setPosition(0);
+//        motor = hardwareMap.get(DcMotor.class, "motor4");
         motor1 = hardwareMap.get(DcMotor.class, "frontLeft");
         motor2 = hardwareMap.get(DcMotor.class, "frontRight");
         motor3 = hardwareMap.get(DcMotor.class, "backRight");
         motor4 = hardwareMap.get(DcMotor.class, "backLeft");
 
-        motor1.setDirection(DcMotor.Direction.FORWARD);
+        motor1.setDirection(DcMotor.Direction.REVERSE);
 
         motor2.setDirection(DcMotor.Direction.REVERSE);
 
-        motor4.setDirection(DcMotor.Direction.FORWARD);
+        motor4.setDirection(DcMotor.Direction.REVERSE);
 
         motor3.setDirection(DcMotor.Direction.REVERSE);
 
@@ -90,14 +90,15 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
 
 
 
-        motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//
+//        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//
+//        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//
+//        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
+//          motor4.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);;
 
 
 
@@ -197,16 +198,8 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             boolean b = this.gamepad1.right_bumper;
 
 
-            if(this.gamepad1.dpad_up) {
-                armMotor.setPower(0.01);
-            }else{
-                armMotor.setPower(0.0);
-            }
-            if(this.gamepad1.dpad_down) {
-                armMotor.setPower(-0.01);
-            }else{
-                armMotor.setPower(0.0);
-            }
+
+
 
             double speed = 1.0;
 
@@ -219,7 +212,8 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
                 speed = 1.0;
             }
 
-            driveController.moveInTeleop(-stickLx, -stickLy, -stickRx,speed);
+            if (gamepad1.a) driveController.moveInTeleop(-stickLx, -stickLy, -stickRx, speed);
+            else driveController.moveInTeleop(-stickLx, -stickLy, -stickRx, 0.25);
 
 
 
@@ -304,7 +298,7 @@ public class RobotControlTestMaybeHopefully extends LinearOpMode {
             }
             //end of macro1
 
-            telemetry.addData("Color", color_sensor.red() + ", " + color_sensor.green() + ", " + color_sensor.blue());
+//            telemetry.addData("Color", color_sensor.red() + ", " + color_sensor.green() + ", " + color_sensor.blue());
 
             telemetry.addData("toggleB", toggleBack);
 

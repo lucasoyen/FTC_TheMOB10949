@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -54,7 +55,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "CucumBananApple", group = "Concept")
+@Autonomous(name = "CucumBananApple", group = "Concept")
 public class  CucumBananApple extends LinearOpMode {
 
     /*
@@ -175,7 +176,8 @@ public class  CucumBananApple extends LinearOpMode {
 
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
-                        if (!done) {
+                        if (!done && !updatedRecognitions.isEmpty()) {
+                            Recognition highest = null;
                             for (Recognition recognition : updatedRecognitions) {
                                 double col = (recognition.getLeft() + recognition.getRight()) / 2;
                                 double row = (recognition.getTop() + recognition.getBottom()) / 2;
@@ -187,26 +189,23 @@ public class  CucumBananApple extends LinearOpMode {
                                 telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                                 telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                                 telemetry.update();
-                                double forwardDist = 0.012;
-                                double sideDist = 0.012; //0.012
-                                double time = 2;
-                                double speed = 0.2;
-
-                                if (recognition.getLabel().equals("cucumber")) {
-                                    encoderRight(sideDist, speed, time);
-                                } else if (recognition.getLabel().equals("banana")) {
-                                    encoderLeft(sideDist, speed, time);
-                                }
-                                encoderForward(forwardDist, speed, time);
-                                //                            moveForward(forwardDist, 1, 3);
-                                //                            if (recognition.getLabel().equals("cucumber")) {
-                                //                                moveRight(sideDist, 1, 3);
-                                //                            } else if (recognition.getLabel().equals("banana")) {
-                                //                                moveLeft(sideDist, 1, 3);
-                                //                            }
-                                done = true;
-                                tfod.deactivate();
+                                if (highest == null || highest.getConfidence() < recognition.getConfidence()) highest = recognition;
                             }
+
+                            double forwardDist = 0.008;
+                            double sideDist = 0.008;
+                            double time = 2;
+                            double speed = 0.2;
+
+                            if (highest.getLabel().equals("cucumber")) {
+                                encoderRight(sideDist, speed, time);
+                            } else if (highest.getLabel().equals("banana")) {
+                                encoderLeft(sideDist, speed, time);
+                            }
+                            encoderForward(forwardDist, speed, time);
+
+                            done = true;
+                            tfod.deactivate();
                             telemetry.update();
                         }
                     }

@@ -56,19 +56,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 
-
-
-public class MecanumDriveTest extends LinearOpMode {
+public class Drive extends LinearOpMode {
 
 
 
-    private DcMotor frontLeft;
+    public DcMotor frontLeft;
 
-    private DcMotor frontRight;
+    public DcMotor frontRight;
 
-    private DcMotor backLeft;
+    public DcMotor backLeft;
 
-    private DcMotor backRight;
+    public DcMotor backRight;
+
+    public DcMotor armMotor;
 
     @Override
 
@@ -84,6 +84,7 @@ public class MecanumDriveTest extends LinearOpMode {
 
         backRight =  hardwareMap.dcMotor.get("backRight");  //port 0
 
+        armMotor = hardwareMap.dcMotor.get("armMotor");
 
 
 
@@ -120,79 +121,47 @@ public class MecanumDriveTest extends LinearOpMode {
 
 
 
-        boolean toggleBack = false;
-
-        boolean toggleBack2 = false;
-
-        boolean x = false;
-
-        boolean pressable = true;
-
-        boolean pressable2 = true;
 
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-
         waitForStart();
-
-
-
-        // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
 
 
-
+            //drive
             double stickLx = this.gamepad1.left_stick_x;
 
             double stickLy = this.gamepad1.left_stick_y;
 
             double stickRx = this.gamepad1.right_stick_x;
 
-            boolean a = this.gamepad1.a;
+            boolean rb = this.gamepad1.right_bumper;
+            boolean lb = this.gamepad1.left_bumper;
+
+            double driveSpeed = 1;
+            if (rb) driveSpeed = 0.1;
+            else if (lb) driveSpeed = 0.5;
 
 
+            driveController.moveInTeleop(stickLx, stickLy, stickRx, driveSpeed);
+            //drive
 
+            //arm
+            double stickLy2 = this.gamepad2.left_stick_y;
+            boolean a2 = this.gamepad2.a;
+            boolean b2 = this.gamepad2.b;
 
+            double armSpeed = 0.8;
+            if (a2) armSpeed = 0.2;
+            else if (b2) armSpeed = 0.4;
 
-            double speed = 1;
-
-            if(a){
-
-                speed = .2;
-
-            }
-
-            driveController.moveInTeleop(stickLx, stickLy, stickRx,speed);
-
-
-
-            if (gamepad1.a && pressable2 == true) {
-
-                pressable2 = false;
-
-                toggleBack2 = !toggleBack2;
-
-            }
-
-            if (gamepad1.a == false) {
-
-                x = false;
-
-                pressable2 = true;
-
-            }
-
-
-
-
-
-
-
-            telemetry.addData("toggleB", toggleBack);
+           if (stickLy2 < 0) armMotor.setPower(-armSpeed);
+           else if (stickLy2 > 0) armMotor.setPower(armSpeed);
+           else armMotor.setPower(0);
+           //arm
 
             telemetry.addData("Status", "Running");
 

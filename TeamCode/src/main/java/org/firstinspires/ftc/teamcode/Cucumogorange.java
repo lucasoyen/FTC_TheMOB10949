@@ -176,7 +176,7 @@ public class  Cucumogorange extends LinearOpMode {
 
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
-                        if (!done && !updatedRecognitions.isEmpty()) {
+                        if (!done && updatedRecognitions.size() > 0) {
                             Recognition highest = null;
                             for (Recognition recognition : updatedRecognitions) {
                                 double col = (recognition.getLeft() + recognition.getRight()) / 2;

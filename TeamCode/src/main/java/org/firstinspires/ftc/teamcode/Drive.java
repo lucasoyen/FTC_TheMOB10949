@@ -70,6 +70,8 @@ public class Drive extends LinearOpMode {
 
     public DcMotor armMotor;
 
+    ColorSensor color_sensor;
+
     @Override
 
     public void runOpMode() {
@@ -86,6 +88,9 @@ public class Drive extends LinearOpMode {
 
         armMotor = hardwareMap.dcMotor.get("armMotor");
 
+        color_sensor = hardwareMap.colorSensor.get("color");
+
+        boolean xToggle = false;
 
 
 
@@ -150,9 +155,11 @@ public class Drive extends LinearOpMode {
             //drive
 
             //arm
+
             double stickLy2 = this.gamepad2.left_stick_y;
             boolean a2 = this.gamepad2.a;
             boolean b2 = this.gamepad2.b;
+            //boolean x2 = this.gamepad2.x;
 
             double armSpeed = 0.8;
             if (a2) armSpeed = 0.2;
@@ -161,7 +168,21 @@ public class Drive extends LinearOpMode {
            if (stickLy2 < 0) armMotor.setPower(-armSpeed);
            else if (stickLy2 > 0) armMotor.setPower(armSpeed);
            else armMotor.setPower(0);
+
+
+           if (gamepad2.x && xToggle) {
+               xToggle = false;
+           } else if (gamepad2.x && !xToggle) xToggle = true;
+
+           if(xToggle && (color_sensor.red()>100 && color_sensor.green()>100 && color_sensor.blue()>100)){
+               telemetry.addData("Collision",  "0.3 power ");
+           } else telemetry.addData("Collision", "0 power");
+
            //arm
+
+            telemetry.addData("Red", color_sensor.red());
+            telemetry.addData("Green", color_sensor.green());
+            telemetry.addData("Blue", color_sensor.blue());
 
             telemetry.addData("Status", "Running");
 

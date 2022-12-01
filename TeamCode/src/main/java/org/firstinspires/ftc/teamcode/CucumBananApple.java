@@ -29,12 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -55,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "CucumBananApple", group = "Concept")
+@TeleOp(name = "CucumBananApple", group = "Concept")
 public class  CucumBananApple extends LinearOpMode {
 
     /*
@@ -113,23 +111,21 @@ public class  CucumBananApple extends LinearOpMode {
         // first.
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-
-        boolean done = false;
+        backLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        backRight = hardwareMap.get(DcMotor.class, "frontLeft");
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
 
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
 
         backLeft.setDirection(DcMotor.Direction.FORWARD);
 
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -157,7 +153,7 @@ public class  CucumBananApple extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.4, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -176,38 +172,28 @@ public class  CucumBananApple extends LinearOpMode {
 
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
-                        if (!done && !updatedRecognitions.isEmpty()) {
-                            Recognition highest = null;
-                            for (Recognition recognition : updatedRecognitions) {
-                                double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                                double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                                double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                                double height = Math.abs(recognition.getTop() - recognition.getBottom());
+                        for (Recognition recognition : updatedRecognitions) {
+                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                                telemetry.addData("", " ");
-                                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                                telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                                telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                                telemetry.update();
-                                if (highest == null || highest.getConfidence() < recognition.getConfidence()) highest = recognition;
-                            }
-
-                            double forwardDist = 0.008;
-                            double sideDist = 0.008;
-                            double time = 2;
-                            double speed = 0.2;
-
-                            if (highest.getLabel().equals("cucumber")) {
-                                encoderRight(sideDist, speed, time);
-                            } else if (highest.getLabel().equals("banana")) {
-                                encoderLeft(sideDist, speed, time);
-                            }
-                            encoderForward(forwardDist, speed, time);
-
-                            done = true;
-                            tfod.deactivate();
+                            telemetry.addData(""," ");
+                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                             telemetry.update();
+                            int forwardDist = 3;
+                            int sideDist = 2;
+
+                            encoderForward(forwardDist, 1, 3);
+                            if (recognition.getLabel().equals("apple")) {
+                                encoderRight(sideDist, 1, 3);
+                            } else if (recognition.getLabel().equals("cucumber")) {
+                                encoderLeft(sideDist, 1, 3);
+                            }
                         }
+                        telemetry.update();
                     }
                 }
             }
@@ -247,7 +233,6 @@ public class  CucumBananApple extends LinearOpMode {
 //        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
          tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
-
     private void encoderDrive(double fl, double fr, double bl, double br, double speed, double time) {
         int frontLeftTarget = (int)(fl * 1400);
         int frontRightTarget = (int)(fr * 1400);
@@ -287,48 +272,16 @@ public class  CucumBananApple extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    private void encoderRight(double dist, double speed, double time) {
+    private void encoderRight(int dist, double speed, double time) {
         encoderDrive(dist, -dist, -dist, dist, speed, time);
     }
-    private void encoderLeft(double dist, double speed, double time) {
+    private void encoderLeft(int dist, double speed, double time) {
         encoderDrive(-dist, dist, dist, -dist, speed, time);
     }
-    private void encoderBack(double dist, double speed, double time) {
+    private void encoderBack(int dist, double speed, double time) {
         encoderDrive(-dist, -dist, -dist, -dist, speed, time);
     }
-    private void encoderForward(double dist, double speed, double time) {
+    private void encoderForward(int dist, double speed, double time) {
         encoderDrive(dist, dist, dist, dist, speed, time);
-    }
-    private void move(double fl, double fr, double bl, double br, double time, double speed) {
-
-        frontLeft.setPower(fl * Math.abs(speed));
-        frontRight.setPower(fr * Math.abs(speed));
-        backLeft.setPower(bl * Math.abs(speed));
-        backRight.setPower(br * Math.abs(speed));
-
-        runtime.reset();
-
-        while (opModeIsActive() && runtime.seconds() < time) {
-            telemetry.addData("Running to", "\nBackLeft: " + bl + "\nBackRight: " + br + "\nFrontRight: " + fr + "\nFrontLeft: " + fl);
-            telemetry.addData("Currently at", backLeft.getCurrentPosition() + ", " + backRight.getCurrentPosition() + ", " + frontRight.getCurrentPosition() + ", " + frontLeft.getCurrentPosition());
-            telemetry.update();
-        }
-
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
-        backLeft.setPower(0);
-    }
-    private void moveRight(double dist, double speed, double time) {
-        move(dist, -dist, -dist, dist, speed, time);
-    }
-    private void moveLeft(double dist, double speed, double time) {
-        move(-dist, dist, dist, -dist, speed, time);
-    }
-    private void moveBack(double dist, double speed, double time) {
-        move(-dist, -dist, -dist, -dist, speed, time);
-    }
-    private void moveForward(double dist, double speed, double time) {
-        move(dist, dist, dist, dist, speed, time);
     }
 }

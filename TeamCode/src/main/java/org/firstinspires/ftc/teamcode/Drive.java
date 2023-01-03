@@ -146,10 +146,9 @@ public class Drive extends LinearOpMode {
             boolean rb = this.gamepad1.right_bumper;
             boolean lb = this.gamepad1.left_bumper;
 
-            double driveSpeed = 1;
-            if (rb) driveSpeed = 0.1;
-            else if (lb) driveSpeed = 0.5;
-
+            double driveSpeed = .8;
+            if (rb) driveSpeed = 0.15;
+            else if (lb) driveSpeed = 0.3;
 
             driveController.moveInTeleop(stickLx, stickLy, stickRx, driveSpeed);
             //drive
@@ -169,20 +168,6 @@ public class Drive extends LinearOpMode {
            else if (stickLy2 > 0) armMotor.setPower(armSpeed);
            else armMotor.setPower(0);
 
-
-           if (gamepad2.x && xToggle) {
-               xToggle = false;
-           } else if (gamepad2.x && !xToggle) xToggle = true;
-
-           if(xToggle && (color_sensor.red()>100 && color_sensor.green()>100 && color_sensor.blue()>100)){
-               telemetry.addData("Collision",  "0.3 power ");
-           } else telemetry.addData("Collision", "0 power");
-
-           //arm
-
-            telemetry.addData("Red", color_sensor.red());
-            telemetry.addData("Green", color_sensor.green());
-            telemetry.addData("Blue", color_sensor.blue());
 
             telemetry.addData("Status", "Running");
 

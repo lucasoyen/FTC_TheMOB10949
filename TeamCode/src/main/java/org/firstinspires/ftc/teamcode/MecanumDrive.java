@@ -788,13 +788,13 @@ public class MecanumDrive {
 
         roamMode = true;
 
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 

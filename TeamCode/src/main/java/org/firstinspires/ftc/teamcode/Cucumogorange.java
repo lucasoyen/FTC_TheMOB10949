@@ -67,12 +67,15 @@ public class  Cucumogorange extends LinearOpMode {
      */
 //    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
 //    private static final String TFOD_MODEL_FILE  = "/Environment.getExternalStorageDirectory().getPath()/FIRST/tflitemodels/CustomTeamModel.tflite";
-    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/amogus.tflite";
-    private static final String[] LABELS = {
-            "amogus",
-            "cucumber",
-            "orange"
-    };
+//    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/amogus.tflite";
+    private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/mob.tflite";
+
+      private static final String[] LABELS = {
+              "B",
+                "M",
+                "O"
+        };
+
 
 
     /*
@@ -192,14 +195,14 @@ public class  Cucumogorange extends LinearOpMode {
                                 if (highest == null || highest.getConfidence() < recognition.getConfidence()) highest = recognition;
                             }
 
-                            double forwardDist = 0.008;
-                            double sideDist = 0.008;
+                            double forwardDist = 0.2;
+                            double sideDist = 0.2;
                             double time = 2;
                             double speed = 0.2;
 
-                            if (highest.getLabel().equals("cucumber")) {
+                            if (highest.getLabel().equals("B")) {
                                 encoderRight(sideDist, speed, time);
-                            } else if (highest.getLabel().equals("orange")) {
+                            } else if (highest.getLabel().equals("M")) {
                                 encoderLeft(sideDist, speed, time);
                             }
                             encoderForward(forwardDist, speed, time);
@@ -237,7 +240,7 @@ public class  Cucumogorange extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.6f;
+        tfodParameters.minResultConfidence = 0.56f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
@@ -249,6 +252,11 @@ public class  Cucumogorange extends LinearOpMode {
     }
 
     private void encoderDrive(double fl, double fr, double bl, double br, double speed, double time) {
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         int frontLeftTarget = (int)(fl * 1400);
         int frontRightTarget = (int)(fr * 1400);
         int backLeftTarget = (int)(bl * 1400);

@@ -70,6 +70,8 @@ public class Drive extends LinearOpMode {
 
     public DcMotor armMotor;
 
+    public DcMotor grabberMotor;
+
     ColorSensor color_sensor;
 
     @Override
@@ -88,11 +90,13 @@ public class Drive extends LinearOpMode {
 
         armMotor = hardwareMap.dcMotor.get("armMotor");
 
-        color_sensor = hardwareMap.colorSensor.get("color");
+        grabberMotor = hardwareMap.dcMotor.get("grabberMotor");
+
+//        color_sensor = hardwareMap.colorSensor.get("color");
 
         boolean xToggle = false;
-
-
+        int position = 0;
+        boolean holding = false;
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
 
@@ -108,16 +112,17 @@ public class Drive extends LinearOpMode {
 
 
 
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
+        grabberMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -135,6 +140,9 @@ public class Drive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            if (gamepad2.x && xToggle) {
+                xToggle = false;
+            } else if (gamepad2.x && !xToggle) xToggle = true;
 
             //drive
             double stickLx = this.gamepad1.left_stick_x;
@@ -146,9 +154,9 @@ public class Drive extends LinearOpMode {
             boolean rb = this.gamepad1.right_bumper;
             boolean lb = this.gamepad1.left_bumper;
 
-            double driveSpeed = 1;
-            if (rb) driveSpeed = 0.1;
-            else if (lb) driveSpeed = 0.5;
+            double driveSpeed = 0.8;
+            if (rb) driveSpeed = 0.3;
+            else if (lb) driveSpeed = 0.15;
 
 
             driveController.moveInTeleop(stickLx, stickLy, stickRx, driveSpeed);
@@ -159,30 +167,68 @@ public class Drive extends LinearOpMode {
             double stickLy2 = this.gamepad2.left_stick_y;
             boolean a2 = this.gamepad2.a;
             boolean b2 = this.gamepad2.b;
-            //boolean x2 = this.gamepad2.x;
+            boolean y2 = this.gamepad2.y;
+            boolean rb2 = this.gamepad2.right_bumper;
+            boolean lb2 = this.gamepad2.left_bumper;
+            boolean x2 = this.gamepad2.x;
+            double rt2 = this.gamepad2.right_trigger;
+            double lt2 = this.gamepad2.left_trigger;
+            boolean r2 = this.gamepad2.dpad_right;
 
-            double armSpeed = 0.8;
-            if (a2) armSpeed = 0.2;
-            else if (b2) armSpeed = 0.4;
+            int height1 = 200;
+            int height2 = 400;
+            int height3 = 600;
 
-           if (stickLy2 < 0) armMotor.setPower(-armSpeed);
-           else if (stickLy2 > 0) armMotor.setPower(armSpeed);
-           else armMotor.setPower(0);
+            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+            double armSpeed = 0.4;
+            if (lb2) armSpeed = 0.2;
+            else if (rb2) armSpeed = 1;
 
-           if (gamepad2.x && xToggle) {
-               xToggle = false;
-           } else if (gamepad2.x && !xToggle) xToggle = true;
+            if (stickLy2 < 0) armMotor.setPower(-armSpeed);
+            else if (stickLy2 > 0) armMotor.setPower(armSpeed);
+            else armMotor.setPower(-0.05);
 
-           if(xToggle && (color_sensor.red()>100 && color_sensor.green()>100 && color_sensor.blue()>100)){
-               telemetry.addData("Collision",  "0.3 power ");
-           } else telemetry.addData("Collision", "0 power");
+            double armMotorPower = 0.15;
+
+            if (a2) {
+                encoderMove(-(height1 - position), armMotor, armMotorPower, 2000);
+                position = height1;
+            } else if (b2) {
+                encoderMove(-(height2 - position), armMotor, armMotorPower, 2000);
+                position = height2;
+            } else if (y2) {
+                encoderMove(-(height3 - position), armMotor, armMotorPower, 2000);
+                position = height3;
+            } else if (x2) {
+                encoderMove(position, armMotor, armMotorPower, 2000);
+                position = 0;
+            } else if (r2) {
+                position = 0;
+            }
+
 
            //arm
 
-            telemetry.addData("Red", color_sensor.red());
-            telemetry.addData("Green", color_sensor.green());
-            telemetry.addData("Blue", color_sensor.blue());
+            //grabber
+
+            double grabberPower = 0.1;
+
+            if (rt2 > 0) {
+                grabberMotor.setPower(grabberPower);
+                holding = false;
+            } else if (lt2 > 0) {
+                grabberMotor.setPower(-grabberPower * 5);
+                holding = true;
+            } else if (rt2 == 0 && !holding) {
+                grabberMotor.setPower(0);
+            }
+
+            //grabber
+
+            telemetry.addData("Motor Position", position);
+
+            telemetry.addData("Motor Position 2 (given)", armMotor.getCurrentPosition());
 
             telemetry.addData("Status", "Running");
 
@@ -191,9 +237,20 @@ public class Drive extends LinearOpMode {
 
 
         }
-
     }
+    public void encoderMove(int dist, DcMotor motor, double pow, int sleep) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        motor.setTargetPosition(dist);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(Math.abs(pow));
+
+        sleep(sleep);
+
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 }
 
 
